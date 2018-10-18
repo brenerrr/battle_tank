@@ -10,8 +10,10 @@ void ATankPlayerController::BeginPlay()
 	ControlledTank = GetControlledTank();
 
 	bool bIsControlledTankValid = CheckForValidPointer<ATank>(ControlledTank);
-	UE_LOG(LogTemp, Warning, TEXT("MyCharacter's Bool is %s"), bIsControlledTankValid ? TEXT("True") : TEXT("False"));
-
+	if (bIsControlledTankValid)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PLAYER TANK: %s"), *ControlledTank->GetName());
+	}
 }
 
 
