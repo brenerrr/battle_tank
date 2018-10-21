@@ -1,4 +1,4 @@
-UnrealBuildTool.GuardedMain: Command line: "C:/Program Files/Epic Games/UE_4.20/Engine/Binaries/DotNET/UnrealBuildTool.exe"  -projectfiles -project="C:/Users/brene/Documents/battle_tank/Battle_Tank 4.20/Battle_Tank.uproject" -game -rocket -progress -log=C:\Users\brene\Documents\battle_tank\Battle_Tank 4.20/Saved/Logs/UnrealVersionSelector-2018.10.17-21.40.10.log
+UnrealBuildTool.GuardedMain: Command line: "C:/Program Files/Epic Games/UE_4.20/Engine/Binaries/DotNET/UnrealBuildTool.exe"  -projectfiles -project="C:/Users/brene/Documents/battle_tank/Battle_Tank 4.20/Battle_Tank.uproject" -game -rocket -progress -log=C:\Users\brene\Documents\battle_tank\Battle_Tank 4.20/Saved/Logs/UnrealVersionSelector-2018.10.21-13.50.38.log
 ProjectFileGenerator.GenerateProjectFiles: Discovering modules, targets and source code for project...
 ProgressWriter.Write: @progress 'Binding IntelliSense data...' 0%
 WindowsPlatform.UpdateCachedWindowsSdks: Found Windows 8.1 SDK at C:\Program Files (x86)\Windows Kits\8.1

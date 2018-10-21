@@ -4,14 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Tank.h"
-#include "Runtime/Engine/Public/UnrealClient.h"
-
-
 #include "TankPlayerController.generated.h"
 
-
-//DECLARE_MULTICAST_DELEGATE_TwoParams(FViewport::FOnViewportResized, FViewport*, uint32);
+class ATank;
 
 
 /**
@@ -42,7 +37,6 @@ public:
 
 protected:
 	ATank* ControlledTank = nullptr;
-	bool IsControlledTankValid = false;
 
 	// Update variables that store viewport size
 	void UpdateViewportSize(FViewport*, uint32);

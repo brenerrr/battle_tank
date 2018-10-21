@@ -2,9 +2,13 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "CheckForValidPointer.h"
 #include "Tank.generated.h"
+
+class UTankAimingComponent;
 
 UCLASS()
 class BATTLE_TANK_API ATank : public APawn
@@ -27,9 +31,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+	UTankAimingComponent* AimingComponent = nullptr;
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 	
-
-
+private: 
+	UStaticMeshComponent* Barrel = nullptr;
+	
 	
 	
 };

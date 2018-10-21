@@ -4,6 +4,8 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Engine.h"
+#include "Runtime/Engine/Public/UnrealClient.h"
+#include "Tank.h"
 
 // Called when the game starts or when spawned
 void ATankPlayerController::BeginPlay()
@@ -12,8 +14,8 @@ void ATankPlayerController::BeginPlay()
 
 	ControlledTank = GetControlledTank();
 
-	bool bIsControlledTankValid = CheckForValidPointer<ATank>(ControlledTank);
-	if (bIsControlledTankValid)
+
+	if (ControlledTank != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PLAYER TANK: %s"), *ControlledTank->GetName());
 	}
@@ -32,13 +34,7 @@ ATank* ATankPlayerController::GetControlledTank() const
 	return Cast<ATank>(GetPawn()); 
 }
 
-// Check if a pointer is valid
-template<typename PointerClass>
-bool ATankPlayerController::CheckForValidPointer(PointerClass* Pointer ) const
-{
-	if (Pointer == nullptr) return false;
-	else return true; 
-}
+
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
@@ -105,4 +101,11 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 	}
 	
 	return bIsDeprojectValid;
+}
+
+template<typename PointerClass>
+bool ATankPlayerController::CheckForValidPointer(PointerClass* Pointer) const
+{
+	if (Pointer == nullptr) return false;
+	else return true;
 }
