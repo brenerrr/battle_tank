@@ -5,7 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Tank.h"
+#include "Runtime/Engine/Public/UnrealClient.h"
+
+
 #include "TankPlayerController.generated.h"
+
+
+//DECLARE_MULTICAST_DELEGATE_TwoParams(FViewport::FOnViewportResized, FViewport*, uint32);
 
 
 /**
@@ -18,15 +24,37 @@ class BATTLE_TANK_API ATankPlayerController : public APlayerController
 	
 	
 public:
+
+	// Get tank controlled by this controller
 	ATank* GetControlledTank() const;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	
+
+	void Tick(float DeltaTime);
+
 	template <typename PointerClass> bool CheckForValidPointer(PointerClass* Pointer) const;
+
+	// Aim in the direction of crosshair
+	void AimTowardsCrosshair() ;
+
+	
 
 protected:
 	ATank* ControlledTank = nullptr;
 	bool IsControlledTankValid = false;
+
+	// Update variables that store viewport size
+	void UpdateViewportSize(FViewport*, uint32);
+
+	// Screen position of crosshair
+	float XCrosshair = 0.5f;
+	float YCrosshair = 0.33333f; 
+
+	// Get hit location from raytrace spawned from crosshair
+	bool GetSightRayHitLocation(FVector &HitLocation);
+
+	// Screen dimensions
+	int32 XScreen, YScreen;
+
 };

@@ -22,10 +22,22 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void AimTowardsPlayer();
 
-	template <typename PointerClass> bool CheckForValidPointer(PointerClass* Pointer) const;
+	template <typename PointerClass> 
+	bool CheckForValidPointer(PointerClass* Pointer) const;
+
+
+	void Tick(float DeltaTime);
 
 protected:
-	ATank * ControlledTank = nullptr;
-	bool IsControlledTankValid = false;
+	ATank* ControlledTank = nullptr;
+	bool bIsControlledTankValid = false;
+
+	// Get tank controlled by TankPlayerController
+	ATank* GetPlayerTank() const;
+	ATank* PlayerTank = nullptr;
+	bool bIsPlayerTankValid = false;
+
+
 };
