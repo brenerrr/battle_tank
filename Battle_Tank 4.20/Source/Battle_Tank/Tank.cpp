@@ -53,10 +53,15 @@ void ATank::Fire()
 									  Barrel->GetSocketLocation(FName("EndBarrel")), 
 								      FVector(1.f, 1.f, 1.f));
 	
-	GetWorld()->SpawnActor<AProjectile>(
+	// Spawn projectile
+	AProjectile* LocalProjectile = GetWorld()->SpawnActor<AProjectile>(
 		Projectile,
 		SpawnActorTransform
-		);
+	);
+
+	// Activate projectile with launch speed
+	LocalProjectile->Activate(LaunchSpeed);
+
 }
 
 
