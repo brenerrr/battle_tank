@@ -103,9 +103,3 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 	return bIsDeprojectValid;
 }
 
-template<typename PointerClass>
-bool ATankPlayerController::CheckForValidPointer(PointerClass* Pointer) const
-{
-	if (Pointer == nullptr) return false;
-	else return true;
-}
