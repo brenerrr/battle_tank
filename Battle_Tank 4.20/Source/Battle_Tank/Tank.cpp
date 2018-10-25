@@ -47,21 +47,25 @@ void ATank::Fire()
 {
 	if (Barrel == nullptr) return;
 	UE_LOG(LogTemp, Warning, TEXT("Fire!"));
-	
-	FTransform SpawnActorTransform;
-	SpawnActorTransform.SetComponents(Barrel->GetComponentQuat(), 
-									  Barrel->GetSocketLocation(FName("EndBarrel")), 
-								      FVector(1.f, 1.f, 1.f));
-	
-	// Spawn projectile
-	AProjectile* LocalProjectile = GetWorld()->SpawnActor<AProjectile>(
-		Projectile,
-		SpawnActorTransform
-	);
 
-	// Activate projectile with launch speed
-	LocalProjectile->Activate(LaunchSpeed);
+	// Only fired within the firerate
+	if (GetWorld()->GetTimeSeconds() - LastTimeFired > 60.f / FireRate)
+	{
+		FTransform SpawnActorTransform;
+		SpawnActorTransform.SetComponents(Barrel->GetComponentQuat(),
+			Barrel->GetSocketLocation(FName("EndBarrel")),
+			FVector(1.f, 1.f, 1.f));
 
+		// Spawn projectile
+		AProjectile* LocalProjectile = GetWorld()->SpawnActor<AProjectile>(
+			Projectile,
+			SpawnActorTransform
+			);
+
+		// Activate projectile with launch speed
+		LocalProjectile->Activate(LaunchSpeed);
+		LastTimeFired = GetWorld()->GetTimeSeconds();
+	}
 }
 
 

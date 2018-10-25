@@ -8,17 +8,17 @@ void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ControlledTank = GetControlledTank();
-	PlayerTank = GetPlayerTank();
+	// Get instance of possessed tank
+	ControlledTank = Cast<ATank>(GetPawn());
 
-	// Check pointers
-	bIsControlledTankValid = CheckForValidPointer<ATank>(ControlledTank);
-	bIsPlayerTankValid = CheckForValidPointer<ATank>(PlayerTank);
+	// Get instance of tank possessed by player
+	PlayerTank = Cast<ATank>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
+
 
 	// Logs
-	if (!bIsControlledTankValid) UE_LOG(LogTemp, Error, TEXT("AI CONTROLLER NOT POSSESSING TANK"));
-	if (!bIsPlayerTankValid) UE_LOG(LogTemp, Error, TEXT("AI DIDN'T FIND PLAYER TANK"));
-	if (bIsControlledTankValid && bIsPlayerTankValid)
+	if (ControlledTank == nullptr) UE_LOG(LogTemp, Error, TEXT("AI CONTROLLER NOT POSSESSING TANK"));
+	if (PlayerTank == nullptr) UE_LOG(LogTemp, Error, TEXT("AI DIDN'T FIND PLAYER TANK"));
+	if ((ControlledTank == nullptr) && (PlayerTank == nullptr))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AI %s tracking %s"), *ControlledTank->GetName(),*PlayerTank->GetName());
 	}
@@ -26,7 +26,7 @@ void ATankAIController::BeginPlay()
 
 void ATankAIController::AimTowardsPlayer()
 {
-	if (!bIsPlayerTankValid) return;
+	if (ControlledTank == nullptr) return;
 
 	FVector PlayerLocation = PlayerTank->GetActorLocation();
 	ControlledTank->AimAt(PlayerLocation);
@@ -38,22 +38,9 @@ void ATankAIController::Tick(float DeltaTime)
 
 	AimTowardsPlayer();
 
+	ControlledTank->Fire();
+
 }
 
 
-ATank* ATankAIController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 
-template<typename PointerClass>
-bool ATankAIController::CheckForValidPointer(PointerClass* Pointer) const
-{
-	if (Pointer == nullptr) return false;
-	else return true;
-}
-
-ATank* ATankAIController::GetPlayerTank() const{
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	return Cast<ATank>(PlayerController->GetPawn());
-}

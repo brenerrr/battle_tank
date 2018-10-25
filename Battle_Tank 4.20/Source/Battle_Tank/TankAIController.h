@@ -31,13 +31,11 @@ public:
 	void Tick(float DeltaTime);
 
 protected:
+	// Current possessed tank
 	ATank* ControlledTank = nullptr;
-	bool bIsControlledTankValid = false;
 
-	// Get tank controlled by TankPlayerController
-	ATank* GetPlayerTank() const;
+	// Tank possessed by player
 	ATank* PlayerTank = nullptr;
-	bool bIsPlayerTankValid = false;
 
 
 };

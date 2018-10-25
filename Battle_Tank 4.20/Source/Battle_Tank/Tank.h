@@ -45,18 +45,26 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		// Sets the barrel reference on the aiming component
 		void SetTurretlReference(UTankTurret* TurretToSet);
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		// Fire rate in rounds per minute
+		float FireRate = 60.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		// Projectile Launch Speed
+		float LaunchSpeed = 1000.f;
+
 private: 
 	// Tank barrel
 	UTankBarrel* Barrel = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
-		// Projectile Launch Speed
-		float LaunchSpeed = 1000.f;
-
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		// Projectile type 
 		TSubclassOf<AProjectile> Projectile;
+	
+	// Instant of last projectile fired
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+		float LastTimeFired = 0.f;
 
 
 };

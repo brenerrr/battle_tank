@@ -20,15 +20,15 @@ public:
 private:
 
 	
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		// Max elevation of barrel
 		float MaxElevation = 60.f;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		// Min elevation of barrel
 		float MinElevation = 0.f;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		// Barrel movement speed
 		float Speed = 5.f;
 	

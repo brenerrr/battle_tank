@@ -42,8 +42,13 @@ protected:
 	void UpdateViewportSize(FViewport*, uint32);
 
 	// Screen position of crosshair
-	float XCrosshair = 0.5f;
-	float YCrosshair = 0.33333f; 
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+		// Crosshair position X axis
+		float XCrosshair = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Setupe)
+		// Crosshair position Y axis
+		float YCrosshair = 0.33333f; 
 
 	// Get hit location from raytrace spawned from crosshair
 	bool GetSightRayHitLocation(FVector &HitLocation);
