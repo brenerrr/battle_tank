@@ -38,7 +38,7 @@ void ATankAIController::Tick(float DeltaTime)
 
 	AimTowardsPlayer();
 
-	ControlledTank->Fire();
+	//ControlledTank->Fire();
 
 }
 
