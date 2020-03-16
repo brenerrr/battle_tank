@@ -16,8 +16,22 @@ class BATTLE_TANK_API UTankTrack : public UStaticMeshComponent
 
 public:
 
-	/// Sets throttle between -1 and 1
+	// Sets throttle between -1 and 1
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
+
+	virtual void BeginPlay() override;
+
+private:
+
+	// Force applied on tank at maximum throttle
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+	float MaxTrackForce = 400000.f;
 	
+	// Root component of tank
+	UPrimitiveComponent* TankBody = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Debug)
+		bool bDebug = false;
+
 };
