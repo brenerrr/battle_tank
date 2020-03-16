@@ -32,6 +32,6 @@ private:
 	UPrimitiveComponent* TankBody = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = Debug)
-		bool bDebug = false;
+	bool bDebug = false;
 
 };

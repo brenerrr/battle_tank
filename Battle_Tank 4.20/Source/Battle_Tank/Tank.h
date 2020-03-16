@@ -11,6 +11,7 @@ class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class UTankMovementComponent;
 
 
 UCLASS()
@@ -37,6 +38,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UTankAimingComponent* AimingComponent = nullptr;
+
+  //UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    //UTankMovementComponent* MovementComponent = nullptr;
 	
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		// Sets the barrel reference on the aiming component
