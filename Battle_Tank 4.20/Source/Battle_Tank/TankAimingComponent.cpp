@@ -72,8 +72,10 @@ void UTankAimingComponent::MoveBarrelTowards(const FVector& AimDirection)
 	FRotator AimRotator = AimDirection.Rotation();
 
 	FRotator Delta = AimRotator - BarrelRotator;
+
 	Barrel->Elevate(Delta.Pitch);
 	Turret->Rotate(Delta.Yaw);
+
 	// Move the barrel the right amount this frame given a max speed and frame time
 
 

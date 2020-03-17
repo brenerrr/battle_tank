@@ -19,16 +19,8 @@ class BATTLE_TANK_API ATankAIController : public AAIController
 public:
 	ATank * GetControlledTank() const;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	void AimTowardsPlayer();
 
-	template <typename PointerClass> 
-	bool CheckForValidPointer(PointerClass* Pointer) const;
-
-
-	void Tick(float DeltaTime);
 
 protected:
 	// Current possessed tank
@@ -37,5 +29,13 @@ protected:
 	// Tank possessed by player
 	ATank* PlayerTank = nullptr;
 
+private:
 
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
+
+  void Tick(float DeltaTime);
+
+  // How close the AI tank can get to the player
+  float AcceptanceRadius = 3000.f;
 };
