@@ -18,8 +18,9 @@ void ATankAIController::BeginPlay()
   AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 
 	// Logs
-  if (!ensure(ControlledTank && PlayerTank && AimingComponent)) return;
-  else UE_LOG(LogTemp, Error, TEXT("AI CONTROLLER NOT FINDING REFERENCES"));
+  if (!ensure(ControlledTank)) return;
+  if (!ensure(AimingComponent)) return;
+  if (!ensure(PlayerTank)) return;
 }
 
 void ATankAIController::AimTowardsPlayer()

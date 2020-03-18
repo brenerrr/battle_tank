@@ -15,7 +15,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
@@ -25,6 +25,8 @@ void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
   Tank = GetOwner();
+  
+  LastTimeFired = GetWorld()->GetTimeSeconds();
 }
 
 // Called every frame
@@ -32,21 +34,27 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+  UpdateFiringStatus();
+}
+
+void UTankAimingComponent::UpdateFiringStatus()
+{
+  if (GetWorld()->GetTimeSeconds() - LastTimeFired < 60.f / FireRate) FiringStatus = EFiringStatus::Reloading;
+  else if (IsBarrelMoving()) FiringStatus = EFiringStatus::Aiming;
+  else FiringStatus = EFiringStatus::Locked;
 }
 
 void UTankAimingComponent::AimAt(FVector& AimLocation)
 {
-  if (!ensure(Barrel)) return; 
+  if (!ensureAlways(Barrel)) return; 
 
 	// Calculate toss direction to hit aimlocation with launchspeed
-	FVector TossDirection(0);
 	TArray<AActor*> ActorsToIgnore;	ActorsToIgnore.Add(Tank);
 
 	bool bIsShotValid = UGameplayStatics::SuggestProjectileVelocity
 	(
 		this,
-		TossDirection,
+		AimDirection,
 		Barrel->GetSocketLocation(FName("EndBarrel")), // ATENTION, BARREL MUST HAVE SOCKET NAMED ENDBARREL
 		AimLocation,
 		LaunchSpeed,
@@ -59,30 +67,25 @@ void UTankAimingComponent::AimAt(FVector& AimLocation)
 		bDebug
 	); 
 
-	// Debug perfect shot trajectory
-	if (bIsShotValid)
-	{
-		MoveBarrelTowards(TossDirection);
-
-		if (bDebug)
-		{
-			DrawDebugDirectionalArrow(
-				GetWorld(),
-				Barrel->GetSocketLocation(FName("EndBarrel")),
-				TossDirection.GetSafeNormal()*100.f + Barrel->GetSocketLocation(FName("EndBarrel")),
-				10.f,
-				FColor::Blue,
-				false,
-				-1.f,
-				0,
-				10.f);
-		}
-	}
+	// Move towards toss direction
+	if (bIsShotValid)	MoveBarrelTowards();
 }
 
-void UTankAimingComponent::MoveBarrelTowards(const FVector& AimDirection)
+bool UTankAimingComponent::IsBarrelMoving()
 {
-  if (!ensure(Barrel && Turret)) return;
+  if (!ensureAlways(Barrel)) return false;
+
+  FVector BarrelFoward = Barrel->GetForwardVector().GetSafeNormal();
+
+  // Check if vectors are close
+  if (AimDirection.GetSafeNormal().Equals(BarrelFoward, 0.1f)) return false; 
+  else return true;
+
+}
+
+void UTankAimingComponent::MoveBarrelTowards()
+{
+  if (!ensureAlways(Barrel && Turret)) return;
 
 	// Compute the difference between current barrel direction and aim direction
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation() ;
@@ -111,10 +114,11 @@ void UTankAimingComponent::InitialiseAimingComponent(UTankTurret * TurretToSet, 
 // Fire projectile from barrel 
 void UTankAimingComponent::Fire()
 {
-  if (!ensureAlways(Barrel && Projectile)) return;
+  if (!ensureAlways(Barrel)) return;
+  if (!ensureAlways(Projectile)) return;
 
   // Only fired within the firerate
-  if (GetWorld()->GetTimeSeconds() - LastTimeFired > 60.f / FireRate)
+  if (FiringStatus != EFiringStatus::Reloading)
   {
     FTransform SpawnActorTransform;
     SpawnActorTransform.SetComponents(
@@ -132,6 +136,8 @@ void UTankAimingComponent::Fire()
     // Activate projectile with launch speed
     LocalProjectile->Activate(LaunchSpeed);
     LastTimeFired = GetWorld()->GetTimeSeconds();
+
+    FiringStatus = EFiringStatus::Reloading;
   }
 }
 
