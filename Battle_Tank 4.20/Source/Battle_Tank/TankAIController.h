@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "Tank.h"
 #include "TankAIController.generated.h"
 
+class UTankAimingComponent;
+
+
 /**
- * 
+ * AI controller
  */
 UCLASS()
 class BATTLE_TANK_API ATankAIController : public AAIController
@@ -17,18 +19,19 @@ class BATTLE_TANK_API ATankAIController : public AAIController
 	
 	
 public:
-	ATank * GetControlledTank() const;
+	 APawn* GetControlledTank() const;
 
 	void AimTowardsPlayer();
 
 
 protected:
 	// Current possessed tank
-	ATank* ControlledTank = nullptr;
+	APawn* ControlledTank = nullptr;
 
 	// Tank possessed by player
-	ATank* PlayerTank = nullptr;
+	APawn* PlayerTank = nullptr;
 
+  UTankAimingComponent* AimingComponent;
 private:
 
   // Called when the game starts or when spawned
@@ -37,5 +40,6 @@ private:
   void Tick(float DeltaTime);
 
   // How close the AI tank can get to the player
+  UPROPERTY(EditDefaultsOnly, Category = "Setup")
   float AcceptanceRadius = 3000.f;
 };

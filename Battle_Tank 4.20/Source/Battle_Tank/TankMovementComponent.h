@@ -18,20 +18,21 @@ class BATTLE_TANK_API UTankMovementComponent : public UNavMovementComponent
 	
 public:
   // Bind tracks to movement component
-  UFUNCTION(BlueprintCallable, Category = Setup)
+  UFUNCTION(BlueprintCallable, Category = "Setup")
     void Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
 
   // Process the intetion of moving foward
-  UFUNCTION(BlueprintCallable, Category = Input)
+  UFUNCTION(BlueprintCallable, Category = "Input")
     void IntendMoveFoward(float Throw);
 
-  UFUNCTION(BlueprintCallable, Category = Input)
+  UFUNCTION(BlueprintCallable, Category = "Input")
     void IntendMoveClockwise(float Throw);
 
-  // TODO check protection for this method
+private: 
+
+  // Called from the pathfinding logic by the AI controllers
   virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
-private:
 
   UTankTrack* LeftTrack = nullptr;
   UTankTrack* RightTrack = nullptr;

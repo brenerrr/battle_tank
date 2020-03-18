@@ -6,11 +6,10 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
-
+class UTankAimingComponent;
 
 /**
- * 
+ * Responsible for translating player input aim to tank
  */
 UCLASS()
 class BATTLE_TANK_API ATankPlayerController : public APlayerController
@@ -20,9 +19,6 @@ class BATTLE_TANK_API ATankPlayerController : public APlayerController
 	
 public:
 
-	// Get tank controlled by this controller
-	ATank* GetControlledTank() const;
-	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -36,7 +32,6 @@ public:
 	
 
 protected:
-	ATank* ControlledTank = nullptr;
 
 	// Update variables that store viewport size
 	void UpdateViewportSize(FViewport*, uint32);
@@ -46,7 +41,7 @@ protected:
 		// Crosshair position X axis
 		float XCrosshair = 0.5f;
 
-	UPROPERTY(EditDefaultsOnly, Category = Setupe)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		// Crosshair position Y axis
 		float YCrosshair = 0.33333f; 
 
@@ -55,5 +50,10 @@ protected:
 
 	// Screen dimensions
 	int32 XScreen, YScreen;
+
+  UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+    void FoundAimingComponent(UTankAimingComponent* AimingCompRef);
+
+  UTankAimingComponent* AimingComponent = nullptr;
 
 };

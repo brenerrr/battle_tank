@@ -5,35 +5,23 @@
 #include "DrawDebugHelpers.h"
 #include "Engine.h"
 #include "Runtime/Engine/Public/UnrealClient.h"
-#include "Tank.h"
+#include "TankAimingComponent.h"
 
 // Called when the game starts or when spawned
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ControlledTank = GetControlledTank();
-
-
-	if (ControlledTank != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PLAYER TANK: %s"), *ControlledTank->GetName());
-	}
-
-    // Get viewport and bind rezising event to UpdateScreenSize function
+  // Get viewport and bind rezising event to UpdateScreenSize function
 	FViewport* Viewport = GEngine->GameViewport->Viewport;
 	Viewport->ViewportResizedEvent.AddUObject(this, &ATankPlayerController::UpdateViewportSize);
 	UpdateViewportSize( Viewport, 0);
 
+  AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 
+  if (!ensure(AimingComponent)) return;
+  FoundAimingComponent(AimingComponent); 
 }
-
-
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn()); 
-}
-
 
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -46,15 +34,11 @@ void ATankPlayerController::Tick(float DeltaTime)
 
 void ATankPlayerController::AimTowardsCrosshair() 
 {
-
-	// Avoid invalid pointer
-	if (!ControlledTank) return;
-
+	if (!ensureAlways(AimingComponent)) return;
 	// Get world location of where crosshair is pointing at
 	FVector HitLocation(0.0f,0.0f,0.0f);
 	bool bIsDeprojectValid = GetSightRayHitLocation(HitLocation);
-
-	if (bIsDeprojectValid) ControlledTank->AimAt(HitLocation);
+	if (bIsDeprojectValid) AimingComponent->AimAt(HitLocation);
 
 }
 

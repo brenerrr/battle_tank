@@ -11,7 +11,7 @@ void UTankTrack::BeginPlay()
 
 void  UTankTrack::SetThrottle(float Throttle)
 {
-	if (TankBody == nullptr) return;
+	if (!ensureAlways(TankBody)) return;
 	// Clamp value between -1 and 1 
 	Throttle = FMath::Clamp<float>(Throttle, -1.f, 1.f);
 

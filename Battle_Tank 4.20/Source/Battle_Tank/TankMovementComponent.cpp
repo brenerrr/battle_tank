@@ -6,7 +6,7 @@
 
 void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
-  if (!LeftTrackToSet || !RightTrackToSet) return;
+  if (!ensureAlways (LeftTrackToSet && RightTrackToSet)) return;
 
   LeftTrack = LeftTrackToSet; 
   RightTrack = RightTrackToSet;
@@ -15,22 +15,21 @@ void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* 
 // TODO PREVENT DOUBLE SPEED WHEN TWO INPUTS ARE GIVEN
 void UTankMovementComponent::IntendMoveFoward(float Throw)
 {
-  if (!LeftTrack || !RightTrack) return;
+  if (!ensureAlways(LeftTrack && RightTrack)) return;
   LeftTrack->SetThrottle(Throw);
   RightTrack->SetThrottle(Throw);
 }
 
 void UTankMovementComponent::IntendMoveClockwise(float Throw)
 {
-  if (!LeftTrack || !RightTrack) return;
-  UE_LOG(LogTemp, Warning, TEXT("Rotating amount %f from %s"), Throw, *GetOwner()->GetName());
+  if (!ensureAlways(LeftTrack && RightTrack)) return;
   LeftTrack->SetThrottle(Throw);
   RightTrack->SetThrottle(-Throw);
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-  //UE_LOG(LogTemp, Warning, TEXT("movevelocity of %s: %s"), *GetOwner()->GetName(), *MoveVelocity.ToString());
+  UE_LOG(LogTemp, Warning, TEXT("movevelocity of %s: %s"), *GetOwner()->GetName(), *MoveVelocity.ToString());
   FVector AIForwardIntetion = MoveVelocity.GetSafeNormal();
   FVector TankFoward = GetOwner()->GetActorForwardVector().GetSafeNormal() ;
 
@@ -39,13 +38,4 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
   IntendMoveClockwise(RotateIntention.Z);
   IntendMoveFoward(FowardIntention);
-  //DrawDebugLine(
-  //  GetWorld(),
-  //  LeftTrack->GetOwner()->GetActorLocation(),
-  //  LeftTrack->GetOwner()->GetActorLocation() + MoveVelocity.GetSafeNormal()*2000.f  ,
-  //  FColor::Black,
-  //  false,
-  //  -1.f,
-  //  0,
-  //  20.f);
 }

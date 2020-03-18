@@ -18,14 +18,21 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
+// Called when the game starts
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	Tank = Cast<ATank>(GetOwner());
+}
 
-void UTankAimingComponent::AimAt(FVector& AimLocation, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector& AimLocation)
 {
 	if (Barrel == nullptr) return;
 
 	// Calculate toss direction to hit aimlocation with launchspeed
 	FVector TossDirection(0);
 	TArray<AActor*> ActorsToIgnore;	ActorsToIgnore.Add(Tank);
+  UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Tank->GetName());
 
 	bool bIsShotValid = UGameplayStatics::SuggestProjectileVelocity
 	(
@@ -66,11 +73,11 @@ void UTankAimingComponent::AimAt(FVector& AimLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrelTowards(const FVector& AimDirection)
 {
+  if (!ensure(Barrel && Turret)) return;
 
 	// Compute the difference between current barrel direction and aim direction
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation() ;
 	FRotator AimRotator = AimDirection.Rotation();
-
 	FRotator Delta = AimRotator - BarrelRotator;
 
 	Barrel->Elevate(Delta.Pitch);
@@ -81,23 +88,13 @@ void UTankAimingComponent::MoveBarrelTowards(const FVector& AimDirection)
 
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-	Tank = Cast<ATank>(GetOwner());
-}
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
+// Initialise aiming component
+void UTankAimingComponent::InitialiseAimingComponent(UTankTurret * TurretToSet, UTankBarrel* BarrelToSet)
 {
-	if (BarrelToSet == nullptr) return;
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
-{
-	if (TurretToSet == nullptr) return;
+	if (!ensureAlways(TurretToSet && BarrelToSet)) return;
 	Turret = TurretToSet;
+  Barrel = BarrelToSet;
 }
 
 

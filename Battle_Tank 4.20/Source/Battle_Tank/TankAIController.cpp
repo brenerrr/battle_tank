@@ -2,6 +2,7 @@
 
 #include "TankAIController.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "TankAimingComponent.h"
 
 // Called when the game starts or when spawned
 void ATankAIController::BeginPlay()
@@ -9,27 +10,24 @@ void ATankAIController::BeginPlay()
 	Super::BeginPlay();
 
 	// Get instance of possessed tank
-	ControlledTank = Cast<ATank>(GetPawn());
+	ControlledTank = GetPawn();
 
 	// Get instance of tank possessed by player
-	PlayerTank = Cast<ATank>(UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
+	PlayerTank = UGameplayStatics::GetPlayerController(this, 0)->GetPawn();
 
+  AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 
 	// Logs
-	if (ControlledTank == nullptr) UE_LOG(LogTemp, Error, TEXT("AI CONTROLLER NOT POSSESSING TANK"));
-	if (PlayerTank == nullptr) UE_LOG(LogTemp, Error, TEXT("AI DIDN'T FIND PLAYER TANK"));
-	if ((ControlledTank == nullptr) && (PlayerTank == nullptr))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AI %s tracking %s"), *ControlledTank->GetName(),*PlayerTank->GetName());
-	}
+  if (!ensure(ControlledTank && PlayerTank && AimingComponent)) return;
+  else UE_LOG(LogTemp, Error, TEXT("AI CONTROLLER NOT FINDING REFERENCES"));
 }
 
 void ATankAIController::AimTowardsPlayer()
 {
-	if (ControlledTank == nullptr) return;
+	if (!ensureAlways(ControlledTank)) return;
 
 	FVector PlayerLocation = PlayerTank->GetActorLocation();
-	ControlledTank->AimAt(PlayerLocation);
+	AimingComponent->AimAt(PlayerLocation);
 }
 
 void ATankAIController::Tick(float DeltaTime)

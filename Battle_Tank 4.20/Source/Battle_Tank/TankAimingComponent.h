@@ -6,6 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
+UENUM()
+enum class EFiringStatus : uint8
+{
+  Reloading, 
+  Aiming, 
+  Locked
+};
+
 class ATank;
 class UTankBarrel;
 class UTankTurret;
@@ -22,13 +30,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AimAt(FVector& AimLocation, float LaunchSpeed);
+	void AimAt(FVector& AimLocation);
 	
-	// Set barrel reference 
-	void SetBarrelReference(UTankBarrel*);
-
-	// Set turret reference
-	void SetTurretReference(UTankTurret*);
+  // Initialize aiming component
+  UFUNCTION(BlueprintCallable, Category = Setup)
+    void InitialiseAimingComponent(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
 		// Turn on debug helpers
@@ -42,12 +48,17 @@ protected:
 	// Tank that owns this component 
 	ATank* Tank = nullptr;
 
+  UPROPERTY(BlueprintReadOnly, Category = "State")
+  EFiringStatus FiringStatus = EFiringStatus::Aiming;
+
+  UPROPERTY(EditDefaultsOnly, Category = Firing)
+    // Projectile Launch Speed
+    float LaunchSpeed = 3000.f;
 
 private:
 	UTankBarrel* Barrel;
-
 	UTankTurret* Turret;
 
+  // Move the tank barrel towards aim direction
 	void MoveBarrelTowards(const FVector& AimDirection);
-
-};
+  };
