@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
-#include "Tank.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -22,17 +24,24 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Tank = Cast<ATank>(GetOwner());
+  Tank = GetOwner();
+}
+
+// Called every frame
+void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
 }
 
 void UTankAimingComponent::AimAt(FVector& AimLocation)
 {
-	if (Barrel == nullptr) return;
+  if (!ensure(Barrel)) return; 
 
 	// Calculate toss direction to hit aimlocation with launchspeed
 	FVector TossDirection(0);
 	TArray<AActor*> ActorsToIgnore;	ActorsToIgnore.Add(Tank);
-  UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Tank->GetName());
 
 	bool bIsShotValid = UGameplayStatics::SuggestProjectileVelocity
 	(
@@ -98,11 +107,32 @@ void UTankAimingComponent::InitialiseAimingComponent(UTankTurret * TurretToSet, 
 }
 
 
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+// Fire projectile from barrel 
+void UTankAimingComponent::Fire()
+{
+  if (!ensureAlways(Barrel && Projectile)) return;
+
+  // Only fired within the firerate
+  if (GetWorld()->GetTimeSeconds() - LastTimeFired > 60.f / FireRate)
+  {
+    FTransform SpawnActorTransform;
+    SpawnActorTransform.SetComponents(
+      Barrel->GetComponentQuat(),
+      Barrel->GetSocketLocation(FName("EndBarrel")),
+      FVector(1.f, 1.f, 1.f));
+
+    // Spawn projectile
+    AProjectile* LocalProjectile = GetWorld()->SpawnActor<AProjectile>(
+      Projectile,
+      SpawnActorTransform
+      );
+
+
+    // Activate projectile with launch speed
+    LocalProjectile->Activate(LaunchSpeed);
+    LastTimeFired = GetWorld()->GetTimeSeconds();
+  }
 }
+
 

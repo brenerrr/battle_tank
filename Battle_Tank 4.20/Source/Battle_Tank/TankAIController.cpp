@@ -40,7 +40,8 @@ void ATankAIController::Tick(float DeltaTime)
   {
     MoveToActor(PlayerTank, AcceptanceRadius);
   }
-	//ControlledTank->Fire();
+	
+  AimingComponent->Fire();
 
 }
 
