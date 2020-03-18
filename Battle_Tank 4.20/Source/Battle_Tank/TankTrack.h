@@ -20,10 +20,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
+
+protected:
 	virtual void BeginPlay() override;
+  
+  virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 
 private:
+  UTankTrack();
 
+  void CorrectSidewaysSlipping(float DeltaTime);
 	// Force applied on tank at maximum throttle
 	UPROPERTY(EditDefaultsOnly, Category = Movement)
 	float MaxTrackForce = 400000.f;
