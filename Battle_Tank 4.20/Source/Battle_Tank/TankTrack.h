@@ -31,14 +31,19 @@ private:
   UTankTrack();
 
   void CorrectSidewaysSlipping(float DeltaTime);
-	// Force applied on tank at maximum throttle
-	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float MaxTrackForce = 400000.f;
-	
-	// Root component of tank
-	UPrimitiveComponent* TankBody = nullptr;
+
+  /*UFUNCTION()
+  void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+*/
 
 	UPROPERTY(EditDefaultsOnly, Category = Debug)
 	bool bDebug = false;
+
+	// Force applied on tank at maximum throttle
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+	float MaxTrackForce = 40000000.f;
+	
+	// Root component of tank
+	UPrimitiveComponent* TankBody = nullptr;
 
 };

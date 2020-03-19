@@ -4,15 +4,19 @@
 #include "Tank.h"
 #include "DrawDebugHelpers.h"
 
-void UTankTrack::BeginPlay()
-{
-	TankBody = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-}
-
 UTankTrack::UTankTrack()
 {
   // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-  PrimaryComponentTick.bCanEverTick = false;
+  PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UTankTrack::BeginPlay()
+{
+  Super::BeginPlay();
+
+	TankBody = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+  
+  //OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
 void UTankTrack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -37,11 +41,17 @@ void UTankTrack::CorrectSidewaysSlipping(float DeltaTime)
   TankRoot->AddForce(CorrectionForce);
 }
 
+//void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+//{
+//  UE_LOG(LogTemp, Warning, TEXT("I'm hit"));
+//}
+
 void  UTankTrack::SetThrottle(float Throttle)
 {
 	if (!ensureAlways(TankBody)) return;
 	// Clamp value between -1 and 1 
 	Throttle = FMath::Clamp<float>(Throttle, -1.f, 1.f);
+
 
 	FVector TrackForce = GetForwardVector() * Throttle * MaxTrackForce;
 	FVector ForceLocation = GetComponentLocation();
