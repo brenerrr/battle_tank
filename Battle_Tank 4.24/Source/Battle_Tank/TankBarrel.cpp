@@ -6,8 +6,8 @@
 
 void UTankBarrel::Elevate(float RotationDirection)
 {
-	RotationDirection = FMath::Clamp<float>(RotationDirection, -1.f, 1.f);
-	float AddedElevation = Speed * RotationDirection  * FApp::GetDeltaTime();
+	RotationDirection = FMath::Clamp<float>(RotationDirection, -FApp::GetDeltaTime()*Speed, FApp::GetDeltaTime()*Speed);
+	float AddedElevation =  RotationDirection ;
 
 	float NewElevation = AddedElevation + RelativeRotation.Pitch;
 	NewElevation = FMath::Clamp<float>(NewElevation, MinElevation, MaxElevation);

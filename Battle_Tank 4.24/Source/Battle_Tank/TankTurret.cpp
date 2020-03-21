@@ -4,8 +4,8 @@
 
 void UTankTurret::Rotate(float RotationDirection)
 {
-	RotationDirection = FMath::Clamp<float>(RotationDirection, -1.f, 1.f);
-	float AddedYaw = Speed * RotationDirection  * FApp::GetDeltaTime();
+	RotationDirection = FMath::Clamp<float>(RotationDirection, -FApp::GetDeltaTime()*Speed, FApp::GetDeltaTime()*Speed);
+	float AddedYaw = RotationDirection;
 
 	float NewYaw = AddedYaw + RelativeRotation.Yaw;
 

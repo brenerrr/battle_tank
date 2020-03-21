@@ -15,6 +15,9 @@ void UTankTrack::BeginPlay()
   Super::BeginPlay();
 
 	TankBody = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+  
+  // Set up collisions notifications and event
+  SetNotifyRigidBodyCollision(true);
   OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
@@ -41,7 +44,6 @@ void UTankTrack::CorrectSidewaysSlipping()
 // Called every frame in which the tank is touching the ground
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-  UE_LOG(LogTemp, Warning, TEXT("I'm hit"));
   CorrectSidewaysSlipping();
   DriveTrack();
 

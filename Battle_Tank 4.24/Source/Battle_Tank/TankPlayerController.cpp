@@ -65,7 +65,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 
 	// Line trace from camera 
 	FHitResult LineTraceResult;
-	ECollisionChannel CollisionChannel(ECC_Visibility);
+	ECollisionChannel CollisionChannel(ECC_WorldStatic);
 	FCollisionQueryParams CollisionQueryParams();
 	FCollisionResponseParams CollisionResponseParams;
 	bool bIsLineTraceValid = GetWorld()->LineTraceSingleByChannel(
