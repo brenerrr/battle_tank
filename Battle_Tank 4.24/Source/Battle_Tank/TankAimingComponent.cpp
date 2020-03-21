@@ -39,7 +39,8 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::UpdateFiringStatus()
 {
-  if (GetWorld()->GetTimeSeconds() - LastTimeFired < 60.f / FireRate) FiringStatus = EFiringStatus::Reloading;
+  if (Ammo == 0) FiringStatus = EFiringStatus::OutOfAmmo;
+  else if (GetWorld()->GetTimeSeconds() - LastTimeFired < 60.f / FireRate) FiringStatus = EFiringStatus::Reloading;
   else if (IsBarrelMoving()) FiringStatus = EFiringStatus::Aiming;
   else FiringStatus = EFiringStatus::Locked;
 }
@@ -116,6 +117,11 @@ EFiringStatus UTankAimingComponent::GetFiringStatus() const
   return FiringStatus;
 }
 
+int UTankAimingComponent::GetAmmoCount() const
+{
+  return Ammo;
+}
+
 // Fire projectile from barrel 
 void UTankAimingComponent::Fire()
 {
@@ -123,7 +129,7 @@ void UTankAimingComponent::Fire()
   if (!ensureAlways(Projectile)) return;
 
   // Only fired within the firerate
-  if (FiringStatus != EFiringStatus::Reloading)
+  if ((FiringStatus == EFiringStatus::Aiming) || (FiringStatus == EFiringStatus::Locked))
   {
     FTransform SpawnActorTransform;
     SpawnActorTransform.SetComponents(
@@ -137,12 +143,12 @@ void UTankAimingComponent::Fire()
       SpawnActorTransform
       );
 
-
     // Activate projectile with launch speed
     LocalProjectile->Activate(LaunchSpeed);
     LastTimeFired = GetWorld()->GetTimeSeconds();
 
     FiringStatus = EFiringStatus::Reloading;
+    Ammo--; // Reduce ammo by one
   }
 }
 

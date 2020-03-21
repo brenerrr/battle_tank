@@ -62,7 +62,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 		YCrosshair*YScreen,
 		CameraLocation,
 		CameraDirection);
-
+  
 	// Line trace from camera 
 	FHitResult LineTraceResult;
 	ECollisionChannel CollisionChannel(ECC_WorldStatic);
@@ -71,7 +71,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 	bool bIsLineTraceValid = GetWorld()->LineTraceSingleByChannel(
 		LineTraceResult,
 		CameraLocation,
-		CameraDirection.GetSafeNormal()*50000.f + CameraLocation,
+		CameraDirection.GetSafeNormal()*500000.f + CameraLocation,
 		CollisionChannel,
 		CollisionQueryParams,
 		CollisionResponseParams
@@ -79,11 +79,11 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation)
 
 	HitLocation = LineTraceResult.Location;
 
-	//if (bIsLineTraceValid) 
-	//{
-	//	DrawDebugSphere(GetWorld(), HitLocation, 200.f, 50, FColor::Purple);
-	//}
-	//
+	if (bIsLineTraceValid) 
+	{
+		DrawDebugSphere(GetWorld(), HitLocation, 200.f, 50, FColor::Purple);
+	}
+	
 	return bIsDeprojectValid;
 }
 

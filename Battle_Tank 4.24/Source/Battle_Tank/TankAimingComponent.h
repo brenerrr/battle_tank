@@ -13,7 +13,8 @@ enum class EFiringStatus : uint8
 {
   Reloading, 
   Aiming, 
-  Locked
+  Locked,
+  OutOfAmmo
 };
 
 class UTankBarrel;
@@ -25,20 +26,24 @@ class BATTLE_TANK_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+  // Initialize aiming component
+  UFUNCTION(BlueprintCallable, Category = Setup)
+    void InitialiseAimingComponent(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
+
+  UFUNCTION(BlueprintCallable, Category = "Getter")
+  EFiringStatus GetFiringStatus() const;
+
+  UFUNCTION(BlueprintCallable, Category = "Getter")
+  int GetAmmoCount() const; 
+
+  UFUNCTION(BlueprintCallable, Category = "Input")
+  void Fire();
+
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
   void AimAt(FVector& AimLocation);
 	
-  // Initialize aiming component
-  UFUNCTION(BlueprintCallable, Category = Setup)
-    void InitialiseAimingComponent(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
-
-  EFiringStatus GetFiringStatus() const;
-
-  UFUNCTION(BlueprintCallable, Category = "Input")
-  void Fire();
-
 protected:
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Setup")
@@ -56,6 +61,10 @@ protected:
   UPROPERTY(EditDefaultsOnly, Category = Firing)
     // Projectile Launch Speed
     float LaunchSpeed = 3000.f;
+
+  UPROPERTY(EditDefaultsOnly, Category = Firing)
+    // Projectile Launch Speed
+    int Ammo = 5;
 
 	virtual void BeginPlay() override;
 	
