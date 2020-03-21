@@ -110,7 +110,11 @@ void UTankAimingComponent::InitialiseAimingComponent(UTankTurret * TurretToSet, 
   Barrel = BarrelToSet;
 }
 
-
+// Get firing status
+EFiringStatus UTankAimingComponent::GetFiringStatus() const
+{
+  return FiringStatus;
+}
 
 // Fire projectile from barrel 
 void UTankAimingComponent::Fire()

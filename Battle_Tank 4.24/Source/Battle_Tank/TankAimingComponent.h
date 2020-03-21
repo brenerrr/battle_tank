@@ -28,18 +28,19 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-  UFUNCTION(BlueprintCallable, Category = "Input")
-  void Fire();
-
-
   void AimAt(FVector& AimLocation);
 	
   // Initialize aiming component
   UFUNCTION(BlueprintCallable, Category = Setup)
     void InitialiseAimingComponent(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
+  EFiringStatus GetFiringStatus() const;
+
+  UFUNCTION(BlueprintCallable, Category = "Input")
+  void Fire();
 
 protected:
+
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Setup")
     // Projectile type 
     TSubclassOf<AProjectile> Projectile;
